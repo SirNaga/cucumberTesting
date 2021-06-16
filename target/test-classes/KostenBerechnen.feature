@@ -1,7 +1,7 @@
 Feature: Wie viel Kostet ein Zug von Wien nach Linz?
   Berechne die Kosten einer Zugverbindung
 
-  Scenario: Zug von Wien nach Linz kostet 38,50€
+  Scenario: Zug von Wien nach Linz kostet 38,40€
     Given StarteWebApp
     And NavigiereZuTicketBuchung
     When Wähle
