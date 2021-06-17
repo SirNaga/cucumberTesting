@@ -13,6 +13,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,56 +24,15 @@ public class StepsDefinition_KostenBerechnen {
 
 
     private WebDriver driver;
+    private WebDriverWait wait;
 
     @Given("StarteWebApp")
     public void startewebapp() {
-        System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
-        driver = new FirefoxDriver();
-        driver.get("https://www.oebb.at/");
-
-    }
-
-    @And("NavigiereZuTicketBuchung")
-    public void navigierezuticketbuchung() {
-        driver.get("https://tickets.oebb.at/de/ticket");
-        try {
-            WebElement from;
-
-            WebDriverWait wait = new WebDriverWait(driver, 10000);
-
-
-            from = wait.until(ExpectedConditions.elementToBeClickable(By.name("stationFrom")));
-            from.click();
-            from.sendKeys("Wien");
-            from.sendKeys(Keys.ENTER);
-
-
-            WebElement to;
-            to = wait.until(ExpectedConditions.elementToBeClickable(By.name("stationTo")));
-            to.click();
-            to.sendKeys("Linz");
-            to.wait(100);
-            to.sendKeys(Keys.ENTER);
-            to = wait.until(ExpectedConditions.elementToBeClickable(By.className("wrapper")));
-
-            to = wait.until(ExpectedConditions.elementToBeClickable(By.name("stationTo")));
-            to.sendKeys(Keys.ENTER);
-
-            //WebElement list = wait.until(ExpectedConditions.elementToBeClickable(By.id("autosuggest")));
-            //list.findElements(By.className("wrapper"));
-
-//            to = wait.until(ExpectedConditions.elementToBeClickable(By.name("stationTo")));
-//            to.click();
-//            to.sendKeys("Linz/Donau Hbf");
-//            to.wait(100);
-//            //to.click();
-//            to.sendKeys(Keys.ENTER);
-
-
-
-        } catch (Exception e) {
-
-        }
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
+        driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, 10000);
+        driver.get("https://tickets.oebb.at/de/ticket/relation");
+        driver.manage().window().setSize(new Dimension(2542, 1382));
 
 
     }
@@ -79,21 +40,36 @@ public class StepsDefinition_KostenBerechnen {
     @When("Wähle")
     public void wähle(io.cucumber.datatable.DataTable dataTable) {
 
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("stationFrom"))).click();
+        // 4 | type | name=stationFrom | Wien
+        driver.findElement(By.name("stationFrom")).sendKeys("Wien");
 
-        // Write code here that turns the phrase above into concrete actions
-        // For automatic transformation, change DataTable to one of
-        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-        // Double, Byte, Short, Long, BigInteger or BigDecimal.
-        //
-        // For other transformations you can register a DataTableType.
-        //throw new io.cucumber.java.PendingException();
+        // 5 | click | css=.entry:nth-child(1) .text |
+        driver.findElement(By.xpath("//div[@id='autosuggest']/div[1]/button")).click();
+
+        // 6 | click | name=stationTo |
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("stationTo"))).click();
+
+        // 7 | type | name=stationTo | Linz
+        driver.findElement(By.name("stationTo")).sendKeys("Linz");
+        // 8 | click | css=.entry:nth-child(1) span:nth-child(2) |
+        driver.findElement(By.xpath("//div[@id='autosuggest']/div[4]/button")).click();
+
+        // 9 | click | css=.travelActionWrapper:nth-child(1) span:nth-child(1) |
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".travelActionWrapper:nth-child(1) span:nth-child(1)"))).click();
+
+        // 10 | click | css=#connection_7980412bc2f6711c7627f1ffdb617df8d0381a45a15572c67ac13583af1ea559 > .travel |
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/ui-view/root-content/router-outlet-wrapper/app-ticket-shop-main/div/div/div/div/timetable-container/div/div/timetable-connection[1]/div/div[1]"))).click();
+
+
     }
 
     @Then("Ticketkosten betragen {double}")
-    public void ticketkosten_betragen(Double double1) {
-        //driver.close();
-        // Write code here that turns the phrase above into concrete actions
+    public void ticketkosten_betragen(Double expectedPrice) {
+        String price = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/ui-view/root-content/router-outlet-wrapper/app-ticket-shop-main/div/div/div/div/offer-state-wrapper/div/offers-container/offer-block/div/div[4]/offer-price/div[1]/p"))).getText();
+        price = price.replace(" ", "").replace("€", "").replace(",", ".");
+        assertEquals(expectedPrice, Double.valueOf(price));
+        driver.close();
     }
 
 }
