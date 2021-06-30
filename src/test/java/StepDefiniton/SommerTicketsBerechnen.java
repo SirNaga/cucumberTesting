@@ -24,8 +24,8 @@ public class SommerTicketsBerechnen {
     public void starteWebapp() {
         //Windows:
         //System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        //driver = new ChromeDriver();
-        driver = new SafariDriver();
+        driver = new ChromeDriver();
+//        driver = new SafariDriver();
         wait = new WebDriverWait(driver, 10000);
         driver.get("https://tickets.oebb.at/de/ticket/relation");
         driver.manage().window().setSize(new Dimension(2542, 1382));

@@ -26,6 +26,10 @@ public class StepsDefinition_KostenBerechnen {
     private WebDriver driver;
     private WebDriverWait wait;
 
+    /*
+    Treiber init
+    Web app aufruf
+     */
     @Given("StarteWebApp")
     public void startewebapp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
@@ -37,6 +41,9 @@ public class StepsDefinition_KostenBerechnen {
 
     }
 
+    /*
+    Von-Bis Ziele werden ausgewählt
+     */
     @When("Wähle")
     public void wähle(io.cucumber.datatable.DataTable dataTable) {
 
@@ -64,6 +71,9 @@ public class StepsDefinition_KostenBerechnen {
 
     }
 
+    /*
+    Lesen des Streckenpreises 
+     */
     @Then("Ticketkosten betragen {double}")
     public void ticketkosten_betragen(Double expectedPrice) {
         String price = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/ui-view/root-content/router-outlet-wrapper/app-ticket-shop-main/div/div/div/div/offer-state-wrapper/div/offers-container/offer-block/div/div[4]/offer-price/div[1]/p"))).getText();
