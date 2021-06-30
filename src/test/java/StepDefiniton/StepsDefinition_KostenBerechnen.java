@@ -72,7 +72,7 @@ public class StepsDefinition_KostenBerechnen {
     }
 
     /*
-    Lesen des Streckenpreises 
+    Ticketpreise werden gelsen und verglichen
      */
     @Then("Ticketkosten betragen {double}")
     public void ticketkosten_betragen(Double expectedPrice) {
