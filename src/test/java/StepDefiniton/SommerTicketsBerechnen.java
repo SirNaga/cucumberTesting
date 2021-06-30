@@ -19,13 +19,11 @@ public class SommerTicketsBerechnen {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    //TODO: WIESO MUSS NAME ANDERS SEIN?
     @Given("StarteWebApp2")
     public void starteWebapp() {
-        //Windows:
-        //System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
+
         driver = new ChromeDriver();
-//        driver = new SafariDriver();
+
         wait = new WebDriverWait(driver, 10000);
         driver.get("https://tickets.oebb.at/de/ticket/relation");
         driver.manage().window().setSize(new Dimension(2542, 1382));
@@ -35,10 +33,6 @@ public class SommerTicketsBerechnen {
 
     @When("User bestellt {int} Sommertickets")
     public void wähle(Integer ticketNumber) {
-
-        //Windows:
-        //wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/app-start-container/section/div[2]/travel-action-listing/div/div[2]/travel-action[1]/button"))).click();
-        //TODO: SAFARI HAT ANDERE LISTE ALS CHROME??
 
         // Sommertickets button anklicken
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/app-start-container/section/div[2]/travel-action-listing/div/div[2]/travel-action[2]/button"))).click();
